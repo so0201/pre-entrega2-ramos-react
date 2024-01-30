@@ -6,18 +6,21 @@ import { useParams } from "react-router-dom";
 const ItemListContainer = () => {
     const [productos, setProductos] = useState([]);
     const category = useParams().category;
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         pedirDatos()
             .then((res) => {
-                if (category) {
-                    setProductos(res.filter((producto) => producto.category === category));
-                } else {
-                    setProductos(res);
+                const filteredProductos = category ? res.filter((producto) => producto.category.toLowerCase() === category.toLowerCase()) : res;
+    
+                setProductos(filteredProductos);
+                setLoading(false);
+    
+                if (category && filteredProductos.length === 0) {
+                    console.log(`No hay productos para la categoría "${category}".`);
                 }
             })
     }, [category]);
-
     return (
         <>
         <ItemList productos={productos} />
