@@ -8,7 +8,6 @@ const ItemListContainer = () => {
     const category = useParams().category;
 
     useEffect(() => {
-        setLoading(true);
         pedirDatos()
             .then((res) => {
                 if (category) {
@@ -16,12 +15,7 @@ const ItemListContainer = () => {
                 } else {
                     setProductos(res);
                 }
-                setLoading(false);
             })
-            .catch((error) => {
-                console.error('Error fetching data:', error);
-                setLoading(false); 
-            });
     }, [category]);
 
     return (
