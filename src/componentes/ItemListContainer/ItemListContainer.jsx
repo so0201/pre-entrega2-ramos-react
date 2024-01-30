@@ -5,20 +5,24 @@ import { useParams } from "react-router-dom";
 
 const ItemListContainer = () => {
     const [productos, setProductos] = useState([]);
-
-    const { category } = useParams()
+    const category = useParams().category;
 
     useEffect(() => {
-        const asyncFunc = category ? pedirDatos : pedirDatos
-
-        asyncFunc(category)
-            .then(response => {
-                setProductos(response)
+        setLoading(true);
+        pedirDatos()
+            .then((res) => {
+                if (category) {
+                    setProductos(res.filter((producto) => producto.category === category));
+                } else {
+                    setProductos(res);
+                }
+                setLoading(false);
             })
-            .catch(error => {
-                console.error(error)
-            })
-    })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+                setLoading(false); 
+            });
+    }, [category]);
 
     return (
         <>
